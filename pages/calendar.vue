@@ -13,20 +13,20 @@
 		],
 	});
 
-	interface DateItem {
-		date: Date;
-		description: string;
-	}
-
 	const store = useEventsStore();
-	const { description, date, selectedDates } = storeToRefs(store);
-	const { addSelectedDate } = store;
+	const { description, date, selectedDates, editingEvent } =
+		storeToRefs(store);
+	const {
+		addSelectedDate,
+		startEditingEvent,
+		finishEditingEvent,
+		cancelEditingEvent,
+	} = store;
 
 	interface CalendarItem {
 		highlight: string;
 		dates: Date[];
 	}
-
 
 	const calendarView = ref('monthly');
 
@@ -58,29 +58,6 @@
 		},
 		{ deep: true }
 	);
-
-	const editingEvent = ref<DateItem | null>(null);
-
-	const startEditingEvent = (event: DateItem) => {
-		editingEvent.value = { ...event };
-	};
-
-	const finishEditingEvent = () => {
-		if (editingEvent.value) {
-			const updatedEvent = editingEvent.value;
-			const index = selectedDates.value.findIndex(
-				(item) => item.date.toString() === updatedEvent.date.toString()
-			);
-			if (index !== -1) {
-				selectedDates.value.splice(index, 1, updatedEvent);
-			}
-		}
-		editingEvent.value = null;
-	};
-
-	const cancelEditingEvent = () => {
-		editingEvent.value = null;
-	};
 </script>
 
 <template>
@@ -121,7 +98,7 @@
 				/>
 			</div>
 		</div>
-		<button class="mt-2 mb-2 button is-primary" @click="addSelectedDate">
+		<button class="mt-2 mb-2 button is-primary is-hovered" @click="addSelectedDate">
 			Add Event
 		</button>
 		<div v-if="editingEvent">
@@ -150,14 +127,14 @@
 			<li
 				v-for="selectedDate in selectedDates"
 				:key="selectedDate.toString()"
-				class="is-size-5 has-text-primary is-flex is-align-items-end"
+				class="mb-2 is-size-5 has-text-primary is-flex is-align-items-center"
 			>
 				{{ selectedDate.date.toLocaleString(undefined, dateOptions) }} -
 				<span class="ml-2 has-text-weight-semibold has-text-warning">{{
 					selectedDate.description
 				}}</span>
 				<button
-					class="ml-4 button is-info is-dark"
+					class="ml-2 button is-info is-rounded is-small is-hovered"
 					@click="startEditingEvent(selectedDate)"
 				>
 					Edit
