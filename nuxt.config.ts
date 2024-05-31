@@ -26,4 +26,7 @@ export default defineNuxtConfig({
 			isCustomElement: (tag) => ['iconify-icon'].includes(tag),
 		},
 	},
+	pinia: {
+		storesDirs: ['./stores/**'],
+	},
 });
