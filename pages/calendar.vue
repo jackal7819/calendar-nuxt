@@ -13,23 +13,22 @@
 		],
 	});
 
-	// const store = useEventsStore();
-	// const selectedDates = computed(() => store.selectedDates);
-
 	interface DateItem {
 		date: Date;
 		description: string;
 	}
+
+	const store = useEventsStore();
+	const { description, date, selectedDates } = storeToRefs(store);
+	const { addSelectedDate } = store;
 
 	interface CalendarItem {
 		highlight: string;
 		dates: Date[];
 	}
 
-	const date = ref(new Date());
+
 	const calendarView = ref('monthly');
-	const selectedDates = ref<DateItem[]>([]);
-	const description = ref('');
 
 	const dateOptions: Intl.DateTimeFormatOptions = {
 		year: 'numeric',
@@ -59,14 +58,6 @@
 		},
 		{ deep: true }
 	);
-
-	const addSelectedDate = () => {
-		selectedDates.value = [
-			...selectedDates.value,
-			{ date: date.value, description: description.value },
-		];
-		description.value = '';
-	};
 
 	const editingEvent = ref<DateItem | null>(null);
 

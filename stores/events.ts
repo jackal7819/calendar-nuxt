@@ -5,5 +5,16 @@ interface DateItem {
 
 export const useEventsStore = defineStore('events', () => {
 	const selectedDates = ref<DateItem[]>([]);
-	return { selectedDates };
+	const description = ref('');
+	const date = ref(new Date());
+
+	const addSelectedDate = () => {
+		selectedDates.value = [
+			...selectedDates.value,
+			{ date: date.value, description: description.value },
+		];
+		description.value = '';
+	};
+	
+	return { description, date, selectedDates, addSelectedDate };
 });
